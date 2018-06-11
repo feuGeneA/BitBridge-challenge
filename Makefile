@@ -4,8 +4,8 @@ all: test benchmark
 
 test: listutil.h \
       node.h \
-	  randomstring.h \
-	  test.m.cpp \
+      randomstring.h \
+      test.m.cpp \
       dependencies/googletest/build/googlemock/gtest/libgtest.a
 	g++ test.m.cpp -o test -std=c++11 -g -pthread \
 	    -isystem dependencies/googletest/googletest/include \
@@ -14,8 +14,8 @@ test: listutil.h \
 
 benchmark: listutil.h \
            node.h \
-		   benchmark.m.cpp \
-		   dependencies/benchmark
+           benchmark.m.cpp \
+           dependencies/benchmark
 	g++ benchmark.m.cpp -o benchmark -std=c++11 -pthread \
 	    -isystem dependencies/benchmark/include \
 	             dependencies/benchmark/build/src/libbenchmark.a \
