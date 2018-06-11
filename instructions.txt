@@ -1,0 +1,30 @@
+Thinking in C/C++, assume you have structure:
+
+struct node
+{
+std::string element;
+node next;
+node random;
+};
+
+Produce a function which will deep copy a linked list. The function will
+receive a node and it should return the copied list's node head.
+
+The element is a random string for each node.
+
+The random pointer points to a random element within the node. For example, the
+first node's random might point to the fifth node, the second node's random
+might point to the first node, and the third node's random might also point to
+the fifth node.
+
+When copied, the random pointer must carry to the copy. For example, if the
+first node's random points to the fifth node, then the copy's first node's
+random must point to the copy's fifth node.
+
+Solve for performance and optimization. Use as little extra memory as possible.
+State the big-O for your algorithm when turning it in.
+
+// Notes
+
+We believe strongly in RDD (ReadMe driven design) — please provide a short
+README discussing the design and implementation of your solution.
