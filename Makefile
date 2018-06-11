@@ -2,8 +2,7 @@ all: test benchmark
 	./test
 	./benchmark
 
-test: listutil.h \
-      node.h \
+test: nodelist.h \
       randomstring.h \
       test.m.cpp \
       dependencies/googletest/build/googlemock/gtest/libgtest.a
@@ -12,8 +11,7 @@ test: listutil.h \
 	             dependencies/googletest/build/googlemock/gtest/libgtest.a \
 		         dependencies/googletest/build/googlemock/gtest/libgtest_main.a
 
-benchmark: listutil.h \
-           node.h \
+benchmark: nodelist.h \
            benchmark.m.cpp \
            dependencies/benchmark
 	g++ benchmark.m.cpp -o benchmark -std=c++11 -pthread \

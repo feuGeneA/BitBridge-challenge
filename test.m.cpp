@@ -4,92 +4,81 @@
 
 #include <gtest/gtest.h>
 
-#include "listutil.h"
-#include "node.h"
+#include "nodelist.h"
 #include "randomstring.h"
 
-bool operator==(node const& lhs, node const& rhs);
-std::ostream & operator<<(std::ostream & os, node const& n);
+bool operator==(NodeList const& lhs, NodeList const& rhs);
+std::ostream & operator<<(std::ostream & os, NodeList const& n);
 
-class DeepCopyTestFixture : public ::testing::Test
-{
-protected:
-    node *list = nullptr,
-         *copy = nullptr;
-    void TearDown()
-    {
-        if ( list != nullptr ) deleteList(list);
-        if ( copy != nullptr ) deleteList(copy);
-    }
-};
-
-TEST_F(DeepCopyTestFixture, example)
+TEST(DeepCopyTest, example)
 {
     // create and copy a node list like the one described in the example in the
     // assignment instructions.
 
-    node A, B, C, D, E;
+    NodeList::node *A, *B, *C, *D, *E;
 
-    for ( node* i : {&A,&B,&C,&D,&E} )
+    for ( NodeList::node** i : {&A,&B,&C,&D,&E} )
     {
-        i->element = randomString();
+        *i = new NodeList::node;
+        (*i)->element = randomString();
     }
 
-    A.next = &B;
-    B.next = &C;
-    C.next = &D;
-    D.next = &E;
-    E.next = nullptr;
+    A->next = B;
+    B->next = C;
+    C->next = D;
+    D->next = E;
+    E->next = nullptr;
 
-    A.random = &E; // per email
-    B.random = &A; // per email
-    C.random = &E; // per email
-    D.random = &B; // not specified in email
-    E.random = &C; // not specified in email
+    A->random = E; // per email
+    B->random = A; // per email
+    C->random = E; // per email
+    D->random = B; // not specified in email
+    E->random = C; // not specified in email
 
-    // for visual inspection:
-    std::cout << "original list:" << std::endl << A << std::endl;
-
-    // make a deep copy of the node list
-    node* copy = deepCopy(&A);
+    NodeList exampleList(A);
 
     // for visual inspection:
-    std::cout << "copy: " << std::endl << *copy << std::endl;
+    std::cout << "original list:" << std::endl << exampleList << std::endl;
 
-    ASSERT_TRUE( A == *copy );
+    NodeList deepCopy(exampleList);
+
+    // for visual inspection:
+    std::cout << "copy: " << std::endl << deepCopy << std::endl;
+
+    ASSERT_TRUE( exampleList == deepCopy );
 }
 
-TEST_F(DeepCopyTestFixture, emptyList)
+TEST(DeepCopyTest, emptyList)
 {
-    node *list = createList(0),
-         *copy = deepCopy(list);
-    ASSERT_TRUE( *list == *copy );
+    NodeList list(static_cast<size_t>(0)); // cast to avoid ambiguity w/ nullptr
+    NodeList deepCopy(list);
+    ASSERT_TRUE( list == deepCopy );
 }
 
-TEST_F(DeepCopyTestFixture, oneElement)
+TEST(DeepCopyTest, oneElement)
 {
-    node *list = createList(1),
-         *copy = deepCopy(list);
-    ASSERT_TRUE( *list == *copy );
+    NodeList list(1);
+    NodeList deepCopy(list);
+    ASSERT_TRUE( list == deepCopy );
 }
 
-TEST_F(DeepCopyTestFixture, aHundredElements)
+TEST(DeepCopyTest, aHundredElements)
 {
-    node *list = createList(100),
-         *copy = deepCopy(list);
-    ASSERT_TRUE( *list == *copy );
+    NodeList list(100);
+    NodeList deepCopy(list);
+    ASSERT_TRUE( list == deepCopy );
 }
 
-TEST_F(DeepCopyTestFixture, aThousandElements)
+TEST(DeepCopyTest, aThousandElements)
 {
-    node *list = createList(1000),
-         *copy = deepCopy(list);
-    ASSERT_TRUE( *list == *copy );
+    NodeList list(1000);
+    NodeList deepCopy(list);
+    ASSERT_TRUE( list == deepCopy );
 }
 
-std::ostream & operator<<(std::ostream & os, node const& n)
+std::ostream & operator<<(std::ostream & os, NodeList const& n)
 {
-    const node* pn = &n;
+    const NodeList::node* pn = n.head;
     do {
         os << "@" << pn << ":(element=" << pn->element << ",next=" << pn->next
             << ",random=" << pn->random << ")" << std::endl;
@@ -98,10 +87,10 @@ std::ostream & operator<<(std::ostream & os, node const& n)
     return os;
 }
 
-bool operator==(node const& lhs, node const& rhs)
+bool operator==(NodeList const& lhs, NodeList const& rhs)
 {
-    const node *l = &lhs,
-               *r = &rhs;
+    const NodeList::node *l = lhs.head,
+                         *r = rhs.head;
 
     while ( (l==nullptr && r==nullptr)==false )
     {

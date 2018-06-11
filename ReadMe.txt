@@ -5,8 +5,8 @@ Deep copy of a
         node * next;
         node * random;
     };
-implemented in node.h:deepCopy(), tested in test.m.cpp, and benchmarked in
-benchmark.m.cpp.
+implemented in nodelist.h:NodeList(NodeList const&), tested in test.m.cpp, and
+benchmarked in benchmark.m.cpp.
 
 Algorithm:
 

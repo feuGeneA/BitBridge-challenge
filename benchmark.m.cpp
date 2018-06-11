@@ -1,23 +1,21 @@
 #include <benchmark/benchmark.h>
 
-#include "listutil.h"
-#include "node.h"
+#include "nodelist.h"
 
 template <size_t n>
 static void benchmarkDeepCopy(benchmark::State& state)
 {
-    node* list = createList(n);
+    NodeList list(n);
     for (auto _ : state)
     {
-        node * copy = deepCopy(list);
+        NodeList *deepCopy = new NodeList(list);
 
         state.PauseTiming();
 
-        deleteList(copy);
+        delete deepCopy;
 
         state.ResumeTiming();
     }
-    deleteList(list);
 }
 
 BENCHMARK_TEMPLATE(benchmarkDeepCopy, 1);
